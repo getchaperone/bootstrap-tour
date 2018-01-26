@@ -3545,6 +3545,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
         delay: false,
         basePath: '',
         template: '<div class="popover" role="tooltip"> <div class="arrow"></div> <h3 class="popover-header"></h3> <div class="popover-body"></div> <div class="popover-navigation"> <div class="btn-group"> <button class="btn btn-sm btn-secondary" data-role="prev">&laquo; Prev</button> <button class="btn btn-sm btn-secondary" data-role="next">Next &raquo;</button> <button class="btn btn-sm btn-secondary" data-role="pause-resume" data-pause-text="Pause" data-resume-text="Resume">Pause</button> </div> <button class="btn btn-sm btn-secondary" data-role="end">End tour</button> </div> </div>',
+        orphanTemplate: '<div class="tour-orphan" role="tooltip"> <div class="popover-body">This guide can not continue</div> </div>',
         afterSetState: function(key, value) {},
         afterGetState: function(key, value) {},
         afterRemoveState: function(key) {},
@@ -3605,6 +3606,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
           duration: this._options.duration,
           delay: this._options.delay,
           template: this._options.template,
+          orphanTemplate: this._options.orphanTemplate,
           onShow: this._options.onShow,
           onShown: this._options.onShown,
           onHide: this._options.onHide,
@@ -4006,6 +4008,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
     };
 
     Tour.prototype._isOrphan = function(step) {
+      console.log('is orphan');
       return (step.element == null) || !$(step.element).length || $(step.element).is(':hidden') && ($(step.element)[0].namespaceURI !== 'http://www.w3.org/2000/svg');
     };
 
@@ -4036,6 +4039,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
       isOrphan = this._isOrphan(step);
       step.template = this._template(step, i);
       if (isOrphan) {
+        console.log('position orphan');
         step.element = 'body';
         step.placement = 'top';
       }
@@ -4072,6 +4076,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
 
     Tour.prototype._template = function(step, i) {
       var $navigation, $next, $prev, $resume, $template, template;
+      console.log('template step');
       template = step.template;
       if (this._isOrphan(step) && {}.toString.call(step.orphan) !== '[object Boolean]') {
         template = step.orphan;
@@ -4081,6 +4086,9 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
       $prev = $navigation.find('[data-role="prev"]');
       $next = $navigation.find('[data-role="next"]');
       $resume = $navigation.find('[data-role="pause-resume"]');
+      if (this._isOrphan(step)) {
+        $template = step.orphanTemplate;
+      }
       if (this._isOrphan(step)) {
         $template.addClass('orphan');
       }
