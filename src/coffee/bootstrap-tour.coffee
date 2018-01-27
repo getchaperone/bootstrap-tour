@@ -461,7 +461,6 @@
           document.location.href = href
 
     _isOrphan: (step) ->
-      console.log 'is orphan'
       # Do not check for is(':hidden') on svg elements. jQuery does not work properly on svg.
       not step.element? or
       not $(step.element).length or
