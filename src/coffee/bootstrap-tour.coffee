@@ -47,7 +47,7 @@
             <button class="btn btn-sm btn-secondary" data-role="end">End tour</button>
           </div>
         </div>'
-        orphanTemplate: '<div class="tour-orphan" role="tooltip">
+        orphanTemplate: '<div class="popover tour-orphan" role="tooltip">
                          <div class="popover-body">This guide can not continue</div>
                          </div>'
         afterSetState: (key, value) ->
@@ -529,7 +529,7 @@
     # Get popover template
     _template: (step, i) ->
       console.log 'template step'
-      template = step.template
+      template = if @_isOrphan(step) then step.orphanTemplate else step.template
 
       if @_isOrphan(step) and ({}).toString.call(step.orphan) isnt '[object Boolean]'
         template = step.orphan
@@ -540,7 +540,6 @@
       $next = $navigation.find '[data-role="next"]'
       $resume = $navigation.find '[data-role="pause-resume"]'
 
-      $template =  step.orphanTemplate if @_isOrphan step
       $template.addClass 'orphan' if @_isOrphan step
       $template.addClass "tour-#{@_options.name} tour-#{@_options.name}-#{i}"
       $template.addClass "tour-#{@_options.name}-reflex" if step.reflex
