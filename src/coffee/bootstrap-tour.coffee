@@ -47,7 +47,7 @@
             <button class="btn btn-sm btn-secondary" data-role="end">End tour</button>
           </div>
         </div>'
-        orphanTemplate: '<div class="tour-orphan" role="tooltip">
+        orphanTemplate: '<div class="popover tour-orphan" role="tooltip">
                          <div class="popover-body">This guide can not continue</div>
                          </div>'
         afterSetState: (key, value) ->
@@ -267,7 +267,6 @@
 
       step = @getStep i
       return unless step
-
       skipToPrevious = i < @_current
 
       # If onShow returns a promise, let's wait until it's done to execute
@@ -461,7 +460,6 @@
           document.location.href = href
 
     _isOrphan: (step) ->
-      console.log 'is orphan'
       # Do not check for is(':hidden') on svg elements. jQuery does not work properly on svg.
       not step.element? or
       not $(step.element).length or
@@ -493,7 +491,6 @@
       step.template = @_template step, i
 
       if isOrphan
-        console.log 'position orphan'
         step.element = 'body'
         step.placement = 'top'
 
@@ -528,8 +525,7 @@
 
     # Get popover template
     _template: (step, i) ->
-      console.log 'template step'
-      template = step.template
+      template = if @_isOrphan(step) then step.orphanTemplate else step.template
 
       if @_isOrphan(step) and ({}).toString.call(step.orphan) isnt '[object Boolean]'
         template = step.orphan
@@ -540,7 +536,6 @@
       $next = $navigation.find '[data-role="next"]'
       $resume = $navigation.find '[data-role="pause-resume"]'
 
-      $template =  step.orphanTemplate if @_isOrphan step
       $template.addClass 'orphan' if @_isOrphan step
       $template.addClass "tour-#{@_options.name} tour-#{@_options.name}-#{i}"
       $template.addClass "tour-#{@_options.name}-reflex" if step.reflex
