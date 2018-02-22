@@ -47,9 +47,6 @@
             <button class="btn btn-sm btn-secondary" data-role="end">End tour</button>
           </div>
         </div>'
-        orphanTemplate: '<div class="popover tour-orphan" role="tooltip">
-                         <div class="popover-body">This guide can not continue</div>
-                         </div>'
         afterSetState: (key, value) ->
         afterGetState: (key, value) ->
         afterRemoveState: (key) ->
@@ -107,7 +104,6 @@
           duration: @_options.duration
           delay: @_options.delay
           template: @_options.template
-          orphanTemplate: @_options.orphanTemplate
           onShow: @_options.onShow
           onShown: @_options.onShown
           onHide: @_options.onHide
@@ -267,6 +263,7 @@
 
       step = @getStep i
       return unless step
+
       skipToPrevious = i < @_current
 
       # If onShow returns a promise, let's wait until it's done to execute
@@ -525,7 +522,7 @@
 
     # Get popover template
     _template: (step, i) ->
-      template = if @_isOrphan(step) then step.orphanTemplate else step.template
+      template = step.template
 
       if @_isOrphan(step) and ({}).toString.call(step.orphan) isnt '[object Boolean]'
         template = step.orphan
@@ -607,6 +604,15 @@
         e.preventDefault()
         @prev() if @_current > 0
       .on "click.tour-#{@_options.name}", ".popover.tour-#{@_options.name} *[data-role='end']", (e) =>
+        e.preventDefault()
+        @end()
+      .on "click.tour-modal", ".chaperone-modal-popover.tour-modal *[data-role='next']", (e) =>
+        e.preventDefault()
+        @next()
+      .on "click.tour-modal", ".chaperone-modal-popover.tour-modal *[data-role='prev']", (e) =>
+        e.preventDefault()
+        @prev() if @_current > 0
+      .on "click.tour-modal", ".chaperone-modal-popover.tour-modal *[data-role='end']", (e) =>
         e.preventDefault()
         @end()
       .on "click.tour-#{@_options.name}", ".popover.tour-#{@_options.name} *[data-role='pause-resume']", (e) ->
