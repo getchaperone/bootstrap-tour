@@ -608,15 +608,13 @@
         @end()
       .on "click.tour-modal", ".chaperone-modal-popover.tour-modal *[data-role='next']", (e) =>
         e.preventDefault()
-        console.log "nextttttttttt"
         @next()
+        $('.main-backdrop').removeClass('chaperone-backdrop tour-backdrop')
       .on "click.tour-modal", ".chaperone-modal-popover.tour-modal *[data-role='prev']", (e) =>
         e.preventDefault()
-        console.log "prevvvvvv"
         @prev() if @_current > 0
       .on "click.tour-modal", ".chaperone-modal-popover.tour-modal *[data-role='end']", (e) =>
         e.preventDefault()
-        console.log "endnddnddnd"
         @end()
       .on "click.tour-#{@_options.name}", ".popover.tour-#{@_options.name} *[data-role='pause-resume']", (e) ->
         e.preventDefault()
