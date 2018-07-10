@@ -269,7 +269,26 @@
       # If onShow returns a promise, let's wait until it's done to execute
       promise = @_makePromise(step.onShow @, i if step.onShow?)
 
-      @setCurrentStep i
+      $element = $ step.element
+      if $element.length == 0
+        console.log 'BOOTSTRAPTOUR DEBUGS ORPHAN if empty condition', step.orphan
+        switch step.orphan
+          when 'false'
+            console.log 'BOOTSTRAPTOUR DEBUGS ORPHAN Stop guide'
+            @setCurrentStep i
+          when 'previous'
+            console.log 'BOOTSTRAPTOUR DEBUGS ORPHAN Skip to previous step', i
+            newStep = if @getCurrentStep() > i then i - 1 else i + 1
+            @setCurrentStep newStep
+            @goTo newStep
+          when 'next'
+            console.log 'BOOTSTRAPTOUR DEBUGS ORPHAN Skip to next step', i
+            console.log @getCurrentStep()
+            newStep = if @getCurrentStep() > i then i + 1 else i - 1
+            @setCurrentStep newStep
+            @goTo newStep
+      else
+        @setCurrentStep i
 
       # Support string or function for path
       path = switch ({}).toString.call step.path
