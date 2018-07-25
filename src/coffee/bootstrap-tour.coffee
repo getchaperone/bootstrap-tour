@@ -278,13 +278,12 @@
             @setCurrentStep i
           when 'previous'
             console.log 'BOOTSTRAPTOUR DEBUGS ORPHAN Skip to previous step', i
-            newStep = if @getCurrentStep() > i then i - 1 else i + 1
+            newStep = if @getCurrentStep() > i then i + 1 else i - 1
             @setCurrentStep newStep
             @goTo newStep
           when 'next'
             console.log 'BOOTSTRAPTOUR DEBUGS ORPHAN Skip to next step', i
-            console.log @getCurrentStep()
-            newStep = if @getCurrentStep() > i then i + 1 else i - 1
+            newStep = if @getCurrentStep() > i then i - 1 else i + 1
             @setCurrentStep newStep
             @goTo newStep
       else
